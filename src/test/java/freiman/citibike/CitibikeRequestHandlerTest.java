@@ -16,9 +16,6 @@ public class CitibikeRequestHandlerTest {
     @Test
     void handleRequest() {
         //given
-        S3Client mockS3Client = mock(S3Client.class);
-        Context context = mock(Context.class);
-        CitibikeRequestHandler handler = new CitibikeRequestHandler(mockS3Client);
         Coordinate fromCoordinate = new Coordinate();
         fromCoordinate.lat = 40.8211;
         fromCoordinate.lon = -73.9359;
@@ -31,6 +28,9 @@ public class CitibikeRequestHandlerTest {
         request.from = fromCoordinate;
         request.to = toCoordinate;
 
+        Context context = mock(Context.class);
+        S3Client mockS3Client = mock(S3Client.class);
+        CitibikeRequestHandler handler = new CitibikeRequestHandler(mockS3Client);
 
         //when
         CitibikeResponse citibikeResponse = handler.handleRequest(request, context);

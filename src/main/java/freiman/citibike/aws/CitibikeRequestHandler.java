@@ -19,6 +19,10 @@ public class CitibikeRequestHandler implements
         s3Client = S3Client.create();
     }
 
+    public CitibikeRequestHandler(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
+
     @Override
     public CitibikeResponse handleRequest(CitibikeRequest request, Context context) {
         try {

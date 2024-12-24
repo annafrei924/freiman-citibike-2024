@@ -29,6 +29,7 @@ public class ClosestStationTest {
         assertEquals(closestStation.name, "FDR Drive & E 35 St");
     }
 
+    @Test
     void closestStationPickUp() {
         //given
         StationServiceFactory factory = new StationServiceFactory();

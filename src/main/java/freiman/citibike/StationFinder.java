@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class StationFinder {
     private Map<String, Station> stations;
-    private static final double EARTH_RADIUS = 6371.0; // Earth radius in kilometers
 
 
     public StationFinder(Map<String, Station> stations) {

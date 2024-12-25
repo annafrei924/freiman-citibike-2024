@@ -2,10 +2,8 @@ package freiman.citibike;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import freiman.citibike.aws.CitibikeRequest;
 import freiman.citibike.aws.CitibikeRequestHandler;
 import freiman.citibike.aws.CitibikeResponse;
-import freiman.citibike.aws.Coordinate;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

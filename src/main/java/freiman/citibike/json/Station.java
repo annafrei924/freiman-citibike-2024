@@ -9,7 +9,6 @@ public class Station {
 
     //station status
     public int num_docks_available;
-    public int num_ebikes_available;
     public int num_bikes_available;
 
 

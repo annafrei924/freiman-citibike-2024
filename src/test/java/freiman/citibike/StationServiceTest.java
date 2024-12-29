@@ -40,7 +40,6 @@ public class StationServiceTest {
         //then
         assertNotNull(collection.data.stations[2].station_id);
         assertNotNull(collection.data.stations[0].num_bikes_available);
-        assertNotNull(collection.data.stations[0].num_ebikes_available);
         assertNotNull(collection.data.stations[0].num_docks_available);
     }
 

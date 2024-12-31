@@ -1,8 +1,13 @@
 package freiman.citibike.map;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import freiman.citibike.StationFinder;
+import freiman.citibike.aws.CitibikeRequest;
 import freiman.citibike.aws.CitibikeRequestHandler;
+import freiman.citibike.aws.CitibikeResponse;
+import freiman.citibike.aws.Coordinate;
 import freiman.citibike.json.Station;
 import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
@@ -15,11 +20,15 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.*;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,10 +39,10 @@ public class MapController {
     private BiConsumer<Double, Double> onStartPointSelected;
     private BiConsumer<Double, Double> onEndPointSelected;
     private boolean startClicked = false;
-    private GeoPosition startPosition;
-    private GeoPosition endPosition;
-    private Station startStation;
-    private Station endStation;
+    private GeoPosition startLocation;
+    private GeoPosition endLocation;
+//    private Station startStation;
+//    private Station endStation;
     private List<GeoPosition> track = new ArrayList<>();
     private Set<Waypoint> waypoints;
 
@@ -62,15 +71,15 @@ public class MapController {
 
 
                 if (!startClicked) {
-                    startPosition = mapViewer.convertPointToGeoPosition(e.getPoint());
+                    startLocation = mapViewer.convertPointToGeoPosition(e.getPoint());
                     startClicked = true;
                     if (onStartPointSelected != null) {
-                        onStartPointSelected.accept(startPosition.getLatitude(), startPosition.getLongitude());
+                        onStartPointSelected.accept(startLocation.getLatitude(), startLocation.getLongitude());
                     }
                 } else {
-                    endPosition = mapViewer.convertPointToGeoPosition(e.getPoint());
+                    endLocation = mapViewer.convertPointToGeoPosition(e.getPoint());
                     if (onEndPointSelected != null) {
-                        onEndPointSelected.accept(endPosition.getLatitude(), endPosition.getLongitude());
+                        onEndPointSelected.accept(endLocation.getLatitude(), endLocation.getLongitude());
                     }
                 }
             }
@@ -78,59 +87,109 @@ public class MapController {
         return mapViewer;
     }
 
-    public void getClosestStation() {
-        CitibikeRequestHandler handler = new CitibikeRequestHandler();
-        StationServiceFactory factory = new StationServiceFactory();
-        StationService service = factory.getService();
-        StationFinder stationFinder = new StationFinder(factory.merge(service));
-        startStation = stationFinder.closestStation(startPosition.getLatitude(),
-                startPosition.getLongitude(), false);
-        endStation = stationFinder.closestStation(endPosition.getLatitude(),
-                endPosition.getLongitude(), true);
+//    public void getClosestStation() {
+//        CitibikeRequestHandler handler = new CitibikeRequestHandler();
+//        StationServiceFactory factory = new StationServiceFactory();
+//        StationService service = factory.getService();
+//        StationFinder stationFinder = new StationFinder(factory.merge(service));
+//        startStation = stationFinder.closestStation(startLocation.getLatitude(),
+//                startLocation.getLongitude(), false);
+//        endStation = stationFinder.closestStation(endLocation.getLatitude(),
+//                endLocation.getLongitude(), true);
+//    }
+
+    public CitibikeRequest writeToJson() {
+        // Create Coordinate objects
+        Coordinate from = new Coordinate();
+        from.lat = startLocation.getLatitude();
+        from.lon = startLocation.getLongitude();
+
+        Coordinate to = new Coordinate();
+        to.lat = endLocation.getLatitude();
+        to.lon = endLocation.getLongitude();
+
+        CitibikeRequest request = new CitibikeRequest();
+        request.from = from;
+        request.to = to;
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("request.json")) {
+            gson.toJson(request, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return request;
+
     }
 
-    public void draw() {
-        getClosestStation();
+    public CitibikeResponse getLambda(CitibikeRequest request) {
+        CitibikeResponse citibikeResponse = null;
+        StationService api = StationServiceFactory.getLambda();
+        Call<CitibikeResponse> call = api.postCitibikeRequest(request);
+        try {
+            Response<CitibikeResponse> response = call.execute();
+            if (response.isSuccessful() && response.body() != null) {
+                citibikeResponse = response.body();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(citibikeResponse.start.name);
+        return citibikeResponse;
+    }
+
+
+    public void drawRoute() {
+        CitibikeResponse response = getLambda(writeToJson());
+        Station startStation = response.start;
+        Station endStation = response.end;
+
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
         waypoints = Set.of(
-                new DefaultWaypoint(startPosition),
-                new DefaultWaypoint(endPosition),
+                new DefaultWaypoint(startLocation),
+                new DefaultWaypoint(endLocation),
                 new DefaultWaypoint(startStation.lat, startStation.lon),
                 new DefaultWaypoint(endStation.lat, endStation.lon)
         );
+        waypointPainter.setWaypoints(waypoints);
 
 
-        track.add(startPosition);
-        track.add(mapViewer.convertPointToGeoPosition(new Point2D.Double(startStation.lon,
-                startStation.lat)));
-        track.add(mapViewer.convertPointToGeoPosition(new Point2D.Double(endStation.lon,
-                endStation.lat)));
-        track.add(endPosition);
+
+        track.add(startLocation);
+        track.add(new GeoPosition(startStation.lat, startStation.lon));
+        track.add(new GeoPosition(endStation.lat, endStation.lon));
+        track.add(endLocation);
 
 
         RoutePainter routePainter = new RoutePainter(track);
 
-        waypointPainter.setWaypoints(waypoints);
         List<Painter<JXMapViewer>> painters = List.of(
                 routePainter,
                 waypointPainter
         );
 
-        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
         mapViewer.setOverlayPainter(painter);
 
-//        mapViewer.zoomToBestFit(
-//                Set.of(from, startStation, endStation, to),
-//                1.0
-//        );
+        mapViewer.zoomToBestFit(
+                Set.of(
+                        startLocation,
+                        new GeoPosition(startStation.lat, startStation.lon),
+                        new GeoPosition(endStation.lat, endStation.lon),
+                        endLocation
+                ),
+                1.0
+        );
+        mapViewer.repaint();
     }
 
     public void clear() {
         startClicked = false;
-        startPosition = null;
-        endPosition = null;
-        startStation = null;
-        endStation = null;
+        startLocation = null;
+        endLocation = null;
+//        startStation = null;
+//        endStation = null;
         track.clear();
         waypoints = Set.of();
         mapViewer.setOverlayPainter(null); // Clear overlay painters

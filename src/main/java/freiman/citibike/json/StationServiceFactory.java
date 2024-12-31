@@ -9,17 +9,24 @@ import java.util.Map;
 
 public class StationServiceFactory {
 
+    public static StationService getLambda() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://rlkpgpmpo7r2unoobpmfwav2eu0wrsut.lambda-url.us-east-2.on.aws/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(StationService.class);
+    }
     public StationService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gbfs.citibikenyc.com/")
-                // Configure Retrofit to use Gson to turn the Json into Objects
                 .addConverterFactory(GsonConverterFactory.create())
-                // Configure Retrofit to use Rx
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
 
         return retrofit.create(StationService.class);
     }
+
 
     public Map<String, Station> merge(StationService service) {
         Map<String, Station> stationsMap = new HashMap<>();

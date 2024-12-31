@@ -52,7 +52,7 @@ public class MapFrame extends JFrame {
 
         // Add button functionality
         map.addActionListener(e -> {
-            mapController.draw();
+            mapController.drawRoute();
             repaint();
         });
         clear.addActionListener(e -> {

@@ -41,8 +41,6 @@ public class MapController {
     private boolean startClicked = false;
     private GeoPosition startLocation;
     private GeoPosition endLocation;
-//    private Station startStation;
-//    private Station endStation;
     private List<GeoPosition> track = new ArrayList<>();
     private Set<Waypoint> waypoints;
 
@@ -86,17 +84,6 @@ public class MapController {
         });
         return mapViewer;
     }
-
-//    public void getClosestStation() {
-//        CitibikeRequestHandler handler = new CitibikeRequestHandler();
-//        StationServiceFactory factory = new StationServiceFactory();
-//        StationService service = factory.getService();
-//        StationFinder stationFinder = new StationFinder(factory.merge(service));
-//        startStation = stationFinder.closestStation(startLocation.getLatitude(),
-//                startLocation.getLongitude(), false);
-//        endStation = stationFinder.closestStation(endLocation.getLatitude(),
-//                endLocation.getLongitude(), true);
-//    }
 
     public CitibikeRequest writeToJson() {
         // Create Coordinate objects

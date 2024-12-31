@@ -7,7 +7,6 @@ public class MapFrame extends JFrame {
 
 
     public MapFrame() {
-        MapController mapController = new MapController();
 
         // Set up the frame
         setTitle("Citibike Bike Map");
@@ -16,6 +15,7 @@ public class MapFrame extends JFrame {
         setLayout(new BorderLayout()); // Use BorderLayout for proper positioning
 
         // Add the map to the center
+        MapController mapController = new MapController();
         add(mapController.createMap(), BorderLayout.CENTER);
 
         // Create the coordinates panel

@@ -1,4 +1,5 @@
 package freiman.citibike.json;
+
 import freiman.citibike.aws.CitibikeRequest;
 import freiman.citibike.aws.CitibikeResponse;
 import io.reactivex.rxjava3.core.Single;

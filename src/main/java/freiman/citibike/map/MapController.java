@@ -3,9 +3,7 @@ package freiman.citibike.map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import freiman.citibike.StationFinder;
 import freiman.citibike.aws.CitibikeRequest;
-import freiman.citibike.aws.CitibikeRequestHandler;
 import freiman.citibike.aws.CitibikeResponse;
 import freiman.citibike.aws.Coordinate;
 import freiman.citibike.json.Station;
@@ -26,7 +24,6 @@ import retrofit2.Response;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -175,8 +172,6 @@ public class MapController {
         startClicked = false;
         startLocation = null;
         endLocation = null;
-//        startStation = null;
-//        endStation = null;
         track.clear();
         waypoints = Set.of();
         mapViewer.setOverlayPainter(null); // Clear overlay painters

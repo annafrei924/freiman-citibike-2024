@@ -78,7 +78,7 @@ public class MapController {
         return mapViewer;
     }
 
-    public CitibikeResponse getLambda() {
+    public void getLambda() {
         Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
         Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());
         CitibikeRequest request = new CitibikeRequest(from, to);
@@ -98,7 +98,6 @@ public class MapController {
                         Throwable::printStackTrace
                 ));
 
-        return citibikeResponse;
     }
 
     public void drawRoute(CitibikeResponse response) {

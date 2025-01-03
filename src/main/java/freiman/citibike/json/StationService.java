@@ -15,9 +15,4 @@ public interface StationService {
 
     @GET("/gbfs/en/station_status.json")
     Single<Stations> stationStatus();
-
-    @POST("/")
-    @Headers("Content-Type: application/json")
-    Call<CitibikeResponse> postCitibikeRequest(@Body CitibikeRequest request);
-
 }

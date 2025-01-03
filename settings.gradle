@@ -1,2 +1,3 @@
 rootProject.name = 'freiman-citibike-2024'
+include 'Screenshots'
 

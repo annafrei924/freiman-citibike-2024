@@ -20,13 +20,13 @@ import java.time.Instant;
 
 public class StationsCache {
     private Stations stationInfo;
+    //CHECKSTYLE:OFF
     private final String BUCKET_NAME = "freiman.citibike1";
     private final String KEY_NAME = "stationInfo.json";
+    //CHECKSTYLE:ON
     private final S3Client s3Client;
     private final StationService service;
     private Instant lastModified;
-
-
 
 
     private boolean s3LastModified() {
@@ -50,6 +50,7 @@ public class StationsCache {
                 .build();
         this.service = new StationServiceFactory().getService();
     }
+
     public Stations getStations() {
         boolean overOneHour = timeSinceLastModified();
         if (stationInfo != null && lastModified != null && !overOneHour) {

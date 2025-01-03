@@ -82,27 +82,6 @@ public class MapController {
         return mapViewer;
     }
 
-//    public CitibikeRequest writeToJson() {
-//        // Create Coordinate objects
-//        Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
-//        Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());
-//
-//
-//        CitibikeRequest request = new CitibikeRequest();
-//        request.from = from;
-//        request.to = to;
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        try (FileWriter writer = new FileWriter("request.json")) {
-//            gson.toJson(request, writer);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return request;
-//
-//    }
-
     public CitibikeResponse getLambda() {
         Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
         Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());

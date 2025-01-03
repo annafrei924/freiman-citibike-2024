@@ -1,13 +1,10 @@
 package freiman.citibike.map;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import freiman.citibike.aws.*;
 import freiman.citibike.json.Station;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import hu.akarnokd.rxjava3.swing.SwingSchedulers;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -64,7 +61,6 @@ public class MapController {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-
                 if (!startClicked) {
                     startLocation = mapViewer.convertPointToGeoPosition(e.getPoint());
                     startClicked = true;
@@ -88,13 +84,14 @@ public class MapController {
         CitibikeRequest request = new CitibikeRequest(from, to);
 
         CitibikeResponse citibikeResponse = null;
-        LambdaService service = LambdaFactory.service();
+        LambdaService service = new LambdaFactory().getService();
         disposables.add(service.getLambda(request)
                 .subscribeOn(Schedulers.io())
                 .observeOn(SwingSchedulers.edt())
                 .subscribe(
                         response -> {
                             if (response.start != null && response.end != null) {
+                                System.out.println(response.start.name);
                                 drawRoute(response);
                             }
                         },
@@ -103,7 +100,6 @@ public class MapController {
 
         return citibikeResponse;
     }
-
 
     public void drawRoute(CitibikeResponse response) {
         Station startStation = response.start;

@@ -7,11 +7,9 @@ import java.util.Map;
 public class StationFinder {
     private Map<String, Station> stations;
 
-
     public StationFinder(Map<String, Station> stations) {
         this.stations = stations;
     }
-
 
     public Station closestStation(double lat, double lon, boolean returning) {
         double minDistance = Double.POSITIVE_INFINITY;

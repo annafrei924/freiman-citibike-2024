@@ -1,5 +1,6 @@
 package freiman.citibike;
 
+import freiman.citibike.aws.StationCache;
 import freiman.citibike.json.Station;
 import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
@@ -50,8 +51,9 @@ public class StationServiceTest {
         StationService service = factory.getService();
         String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
 
+        StationCache cache = new StationCache();
         //when
-        Map<String, Station> stations = factory.merge(service);
+        Map<String, Station> stations = factory.merge(service, cache);
 
         //then
         assertNotNull(stations.containsKey(key));

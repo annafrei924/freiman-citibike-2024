@@ -20,18 +20,15 @@ public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyReq
 
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
-        Map<String, Station> stations = factory.merge(service);
-        StationFinder stationFinder = new StationFinder(stations);
+        StationCache cache = new StationCache();
+        System.out.println("calling merge bc using lambda");
+        StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
 
-        CitibikeResponse response = new CitibikeResponse();
-        response.from = request.from;
-        response.to = request.to;
 
-        response.start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
-
-        response.end = stationFinder.closestStation(request.to.lat, request.to.lon, true);
-
-        return response;
+        Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
+        Station end = stationFinder.closestStation(request.to.lat, request.to.lon, true);
+        return new CitibikeResponse(request.from, request.to, start, end);
     }
+
 }
 

@@ -1,14 +1,11 @@
 package freiman.citibike.map;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import freiman.citibike.aws.CitibikeRequest;
-import freiman.citibike.aws.CitibikeResponse;
-import freiman.citibike.aws.Coordinate;
+import freiman.citibike.aws.*;
 import freiman.citibike.json.Station;
-import freiman.citibike.json.StationService;
-import freiman.citibike.json.StationServiceFactory;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import hu.akarnokd.rxjava3.swing.SwingSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.CenterMapListener;
@@ -18,14 +15,12 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.*;
-import retrofit2.Call;
-import retrofit2.Response;
+
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +35,8 @@ public class MapController {
     private GeoPosition endLocation;
     private List<GeoPosition> track = new ArrayList<>();
     private Set<Waypoint> waypoints;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
 
     public JXMapViewer createMap() {
         mapViewer = new JXMapViewer();
@@ -64,7 +61,6 @@ public class MapController {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-
                 if (!startClicked) {
                     startLocation = mapViewer.convertPointToGeoPosition(e.getPoint());
                     startClicked = true;
@@ -82,50 +78,28 @@ public class MapController {
         return mapViewer;
     }
 
-    public CitibikeRequest writeToJson() {
-        // Create Coordinate objects
-        Coordinate from = new Coordinate();
-        from.lat = startLocation.getLatitude();
-        from.lon = startLocation.getLongitude();
+    public void getLambda() {
+        Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
+        Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());
+        CitibikeRequest request = new CitibikeRequest(from, to);
 
-        Coordinate to = new Coordinate();
-        to.lat = endLocation.getLatitude();
-        to.lon = endLocation.getLongitude();
 
-        CitibikeRequest request = new CitibikeRequest();
-        request.from = from;
-        request.to = to;
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter("request.json")) {
-            gson.toJson(request, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return request;
+        LambdaService service = new LambdaFactory().getService();
+        disposables.add(service.getLambda(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(SwingSchedulers.edt())
+                .subscribe(
+                        response -> {
+                            if (response.start != null && response.end != null) {
+                                drawRoute(response);
+                            }
+                        },
+                        Throwable::printStackTrace
+                ));
 
     }
 
-    public CitibikeResponse getLambda(CitibikeRequest request) {
-        CitibikeResponse citibikeResponse = null;
-        StationService api = StationServiceFactory.getLambda();
-        Call<CitibikeResponse> call = api.postCitibikeRequest(request);
-        try {
-            Response<CitibikeResponse> response = call.execute();
-            if (response.isSuccessful() && response.body() != null) {
-                citibikeResponse = response.body();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(citibikeResponse.start.name);
-        return citibikeResponse;
-    }
-
-
-    public void drawRoute() {
-        CitibikeResponse response = getLambda(writeToJson());
+    public void drawRoute(CitibikeResponse response) {
         Station startStation = response.start;
         Station endStation = response.end;
 
@@ -137,8 +111,6 @@ public class MapController {
                 new DefaultWaypoint(endStation.lat, endStation.lon)
         );
         waypointPainter.setWaypoints(waypoints);
-
-
 
         track.add(startLocation);
         track.add(new GeoPosition(startStation.lat, startStation.lon));
@@ -176,7 +148,6 @@ public class MapController {
         waypoints = Set.of();
         mapViewer.setOverlayPainter(null); // Clear overlay painters
         mapViewer.repaint();
-        System.out.println("Cleared all points and overlays.");
     }
 
     public void setOnStartPointSelected(BiConsumer<Double, Double> listener) {

@@ -8,14 +8,12 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.painter.Painter;
 
 /**
  * Paints a route
- *
  * @author Martin Steiger
  */
 public class RoutePainter implements Painter<JXMapViewer>

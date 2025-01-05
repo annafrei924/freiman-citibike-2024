@@ -1,5 +1,6 @@
 package freiman.citibike;
 
+import freiman.citibike.aws.StationCache;
 import freiman.citibike.json.Station;
 import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
@@ -16,7 +17,8 @@ public class ClosestStationTest {
         //given
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
-        StationFinder stationFinder = new StationFinder(factory.merge(service));
+        StationCache cache = new StationCache();
+        StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
         double lon = -73.971212141;
         double lat = 40.744220;
 
@@ -34,7 +36,8 @@ public class ClosestStationTest {
         //given
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
-        StationFinder stationFinder = new StationFinder(factory.merge(service));
+        StationCache cache = new StationCache();
+        StationFinder stationFinder = new StationFinder(factory.merge(service,cache));
         double lon = -73.971212141;
         double lat = 40.744220;
 

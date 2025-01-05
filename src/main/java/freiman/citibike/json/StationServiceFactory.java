@@ -1,5 +1,6 @@
 package freiman.citibike.json;
 
+import freiman.citibike.aws.StationCache;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -8,15 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StationServiceFactory {
-
-    public static StationService getLambda() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://rlkpgpmpo7r2unoobpmfwav2eu0wrsut.lambda-url.us-east-2.on.aws/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(StationService.class);
-    }
     public StationService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gbfs.citibikenyc.com/")
@@ -28,9 +20,10 @@ public class StationServiceFactory {
     }
 
 
-    public Map<String, Station> merge(StationService service) {
+    public Map<String, Station> merge(StationService service, StationCache cache) {
+        System.out.println("merge is being called");
         Map<String, Station> stationsMap = new HashMap<>();
-        Stations stationInfo = service.stationInfo().blockingGet();
+        Stations stationInfo = cache.getStations();
         Stations stationStatus = service.stationStatus().blockingGet();
         //First, add all station info (name, lon, lat) into the map
         for (Station station : stationInfo.data.stations) {

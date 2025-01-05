@@ -37,7 +37,7 @@ public class ClosestStationTest {
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
         StationCache cache = new StationCache();
-        StationFinder stationFinder = new StationFinder(factory.merge(service,cache));
+        StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
         double lon = -73.971212141;
         double lat = 40.744220;
 

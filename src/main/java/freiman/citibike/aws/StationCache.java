@@ -19,8 +19,10 @@ import java.time.Instant;
 
 public class StationCache {
     private Stations stationInfo;
+    //CHECKSTYLE:OFF
     private final String BUCKET_NAME = "freiman.citibike1";
     private final String KEY_NAME = "stationInfo.json";
+    //CHECKSTYLE:ON
     private final S3Client s3Client;
     private final StationService service;
     private Instant lastModified;
@@ -43,8 +45,7 @@ public class StationCache {
             stationInfo = service.stationInfo().blockingGet();
             writeToS3();
             lastModified = Instant.now();
-        }
-        else if (stationInfo == null) {
+        } else if (stationInfo == null) {
             System.out.println("getting stations from cache");
             readFromS3();
             lastModified = Instant.now();

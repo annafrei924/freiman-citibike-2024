@@ -1,6 +1,6 @@
 package freiman.citibike.json;
 
-import io.reactivex.rxjava3.core.Single;;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
 
 

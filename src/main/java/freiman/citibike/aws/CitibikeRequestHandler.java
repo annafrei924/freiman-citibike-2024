@@ -21,7 +21,6 @@ public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyReq
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
         StationCache cache = new StationCache();
-        System.out.println("calling merge bc using lambda");
         StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
 
 

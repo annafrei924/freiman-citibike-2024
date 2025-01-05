@@ -21,11 +21,9 @@ public class StationServiceFactory {
 
 
     public Map<String, Station> merge(StationService service, StationCache cache) {
-        System.out.println("merge is being called");
         Map<String, Station> stationsMap = new HashMap<>();
         Stations stationInfo = cache.getStations();
         Stations stationStatus = service.stationStatus().blockingGet();
-        //First, add all station info (name, lon, lat) into the map
         for (Station station : stationInfo.data.stations) {
             stationsMap.put(station.station_id, station);
         }

@@ -38,15 +38,12 @@ public class StationCache {
     public Stations getStations() {
         boolean overOneHour = timeSinceLastModified();
         if (stationInfo != null && lastModified != null && !overOneHour) {
-            System.out.println("using station info bc less than an hour");
             return stationInfo;
         } else if (stationInfo == null && (overOneHour || lastModified == null)) {
-            System.out.println("Getting new stations because don't have");
             stationInfo = service.stationInfo().blockingGet();
             writeToS3();
             lastModified = Instant.now();
         } else if (stationInfo == null) {
-            System.out.println("getting stations from cache");
             readFromS3();
             lastModified = Instant.now();
         }

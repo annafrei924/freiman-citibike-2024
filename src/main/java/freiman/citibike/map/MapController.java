@@ -84,6 +84,7 @@ public class MapController {
         CitibikeRequest request = new CitibikeRequest(from, to);
 
 
+        CitibikeResponse citibikeResponse = null; 
         LambdaService service = new LambdaFactory().getService();
         disposables.add(service.getLambda(request)
                 .subscribeOn(Schedulers.io())
@@ -98,6 +99,9 @@ public class MapController {
                 ));
 
     }
+
+
+
 
     public void drawRoute(CitibikeResponse response) {
         Station startStation = response.start;

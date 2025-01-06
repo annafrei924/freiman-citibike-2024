@@ -14,15 +14,15 @@ public class ClosestStationTest {
 
     @Test
     void closestStationReturn() {
-        try {
+        
             //given
             StationServiceFactory factory = new StationServiceFactory();
             StationService service = factory.getService();
-            StationCache cache = new StationCache();
-            StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
             double lon = -73.971212141;
             double lat = 40.744220;
 
+            StationCache cache = new StationCache();
+            StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
 
             //when
             Station closestStation = stationFinder.closestStation(lat, lon, true);
@@ -30,15 +30,12 @@ public class ClosestStationTest {
             //then
             assertNotNull(closestStation);
             assertEquals(closestStation.name, "FDR Drive & E 35 St");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            assertNotNull(e);
-        }
+        
     }
 
     @Test
     void closestStationPickUp() {
-        try {
+
             //given
             StationServiceFactory factory = new StationServiceFactory();
             StationService service = factory.getService();
@@ -54,9 +51,6 @@ public class ClosestStationTest {
             //then
             assertNotNull(closestStation);
             assertEquals(closestStation.name, "FDR Drive & E 35 St");
-        } catch (Exception e) {
-            assertNotNull(e);
-            System.out.println(e.getMessage());
-        }
+
     }
 }

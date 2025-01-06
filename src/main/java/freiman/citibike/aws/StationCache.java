@@ -40,7 +40,6 @@ public class StationCache {
         if (stationInfo != null && lastModified != null && !overOneHour) {
             return stationInfo;
         } else if (stationInfo == null && (overOneHour || lastModified == null)) {
-            stationInfo = service.stationInfo().blockingGet();
             writeToS3();
             lastModified = Instant.now();
         } else if (stationInfo == null) {
@@ -52,14 +51,18 @@ public class StationCache {
     }
 
     public void writeToS3() {
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(BUCKET_NAME)
-                .key(KEY_NAME)
-                .build();
+        try {
+            stationInfo = service.stationInfo().blockingGet();
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(KEY_NAME)
+                    .build();
 
-        Gson gson = new Gson();
-        String content = gson.toJson(stationInfo);
-        s3Client.putObject(putObjectRequest, RequestBody.fromString(content));
+            Gson gson = new Gson();
+            s3Client.putObject(putObjectRequest, RequestBody.fromString(gson.toJson(stationInfo)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void readFromS3() {

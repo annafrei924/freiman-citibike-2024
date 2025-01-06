@@ -5,11 +5,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import freiman.citibike.aws.CitibikeRequestHandler;
 import freiman.citibike.aws.CitibikeResponse;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +14,7 @@ public class CitibikeRequestHandlerTest {
 
     @Test
     void handleRequest() {
-        try {
+
             //given
             String body = "{\n" + "\n" + "  \"from\": {\n" + "\n" + "    \"lat\": 40.8211,\n" + "\n"
                     + "    \"lon\": -73.9359\n" + "\n" + "  },\n" + "\n" + "  \"to\": {\n"
@@ -36,10 +32,7 @@ public class CitibikeRequestHandlerTest {
             //then
             assertEquals(citibikeResponse.start.name, "Lenox Ave & W 146 St");
             assertEquals(citibikeResponse.end.name, "Berry St & N 8 St");
-        } catch (Exception e) {
-            assertNotNull(e);
-            System.out.println(e.getMessage());
-        }
+
     }
 
 }

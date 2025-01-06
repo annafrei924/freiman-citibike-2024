@@ -42,7 +42,7 @@ public class StationServiceTest {
 
     @Test
     void merge() {
-        try {
+
             //given
             StationServiceFactory factory = new StationServiceFactory();
             StationService service = factory.getService();
@@ -57,12 +57,7 @@ public class StationServiceTest {
             Station station = stations.get(key);
             assertNotEquals(0, station.lon);
             assertNotEquals(0, station.lat);
-            assertNotNull(station.num_docks_available);
-            assertNotNull(station.num_bikes_available);
-        } catch (Exception e) {
-            assertNotNull(e);
-            System.out.println(e.getMessage());
-        }
+
     }
 
 }

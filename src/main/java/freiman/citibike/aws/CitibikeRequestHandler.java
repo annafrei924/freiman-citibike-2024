@@ -19,20 +19,17 @@ public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyReq
         CitibikeRequest request = gson.fromJson(body, CitibikeRequest.class);
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
-        try {
-            StationCache cache = new StationCache();
-            StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
+
+        StationCache cache = new StationCache();
+        StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
 
 
-            Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
-            Station end = stationFinder.closestStation(request.to.lat, request.to.lon, true);
+        Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
+        Station end = stationFinder.closestStation(request.to.lat, request.to.lon, true);
 
-            return new CitibikeResponse(request.from, request.to, start, end);
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return new CitibikeResponse(request.from, request.to, start, end);
+
+
     }
 
 }

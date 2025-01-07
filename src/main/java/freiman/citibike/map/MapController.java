@@ -152,7 +152,7 @@ public class MapController {
         mapViewer.repaint();
     }
 
-    //listeners for when the user clicks on points
+    //listeners
     public void setOnStartPointSelected(BiConsumer<Double, Double> listener) {
         this.onStartPointSelected = listener;
     }

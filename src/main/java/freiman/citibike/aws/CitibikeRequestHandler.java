@@ -8,9 +8,16 @@ import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
 import freiman.citibike.StationFinder;
 import freiman.citibike.json.Station;
-import java.util.Map;
+import freiman.citibike.aws.dagger.CacheComponent;
+import javax.inject.Inject;
 
 public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyRequestEvent, CitibikeResponse> {
+    private final StationCache cache;
+
+    @Inject
+    public CitibikeRequestHandler(StationCache cache) {
+        this.cache = cache;
+    }
 
     @Override
     public CitibikeResponse handleRequest(APIGatewayProxyRequestEvent event, Context context) {
@@ -19,18 +26,11 @@ public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyReq
         CitibikeRequest request = gson.fromJson(body, CitibikeRequest.class);
         StationServiceFactory factory = new StationServiceFactory();
         StationService service = factory.getService();
-
-        StationCache cache = new StationCache();
-        StationFinder stationFinder = new StationFinder(factory.merge(service, cache));
-
+        StationFinder stationFinder = new StationFinder(new StationServiceFactory().merge(service, cache));
 
         Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
         Station end = stationFinder.closestStation(request.to.lat, request.to.lon, true);
 
         return new CitibikeResponse(request.from, request.to, start, end);
-
-
     }
-
 }
-

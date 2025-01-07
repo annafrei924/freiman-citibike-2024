@@ -1,3 +1,4 @@
+
 package freiman.citibike.aws;
 
 import com.google.gson.Gson;
@@ -44,7 +45,6 @@ public class StationCache {
             lastModified = Instant.now();
         } else if (stationInfo == null) {
             readFromS3();
-            lastModified = Instant.now();
         }
         return stationInfo;
 

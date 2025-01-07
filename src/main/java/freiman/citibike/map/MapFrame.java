@@ -12,9 +12,7 @@ public class MapFrame extends JFrame {
         setTitle("Citibike Bike Map");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout()); // Use BorderLayout for proper positioning
-
-        // Add the map to the center
+        setLayout(new BorderLayout());
         MapController mapController = new MapController();
         add(mapController.createMap(), BorderLayout.CENTER);
 
@@ -34,11 +32,9 @@ public class MapFrame extends JFrame {
         buttons.add(map);
         buttons.add(clear);
 
-        // Add the panels to the frame
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(coordinates, BorderLayout.NORTH);
         southPanel.add(buttons, BorderLayout.SOUTH);
-
         add(southPanel, BorderLayout.SOUTH);
 
         // Set up MapController listeners to update text fields
@@ -60,8 +56,5 @@ public class MapFrame extends JFrame {
             end.setText("");
             mapController.clear();
         });
-
-        // Make the frame visible
-        setVisible(true);
     }
 }

@@ -37,7 +37,7 @@ public class MapController {
     private Set<Waypoint> waypoints;
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-
+    //creates the map & mouse features
     public JXMapViewer createMap() {
         mapViewer = new JXMapViewer();
 
@@ -78,13 +78,12 @@ public class MapController {
         return mapViewer;
     }
 
+    //calls the lambda to get the station information
     public void getLambda() {
         Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
         Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());
         CitibikeRequest request = new CitibikeRequest(from, to);
 
-
-        CitibikeResponse citibikeResponse = null; 
         LambdaService service = new LambdaFactory().getService();
         disposables.add(service.getLambda(request)
                 .subscribeOn(Schedulers.io())
@@ -100,9 +99,7 @@ public class MapController {
 
     }
 
-
-
-
+    //draws waypoints and route
     public void drawRoute(CitibikeResponse response) {
         Station startStation = response.start;
         Station endStation = response.end;
@@ -144,16 +141,18 @@ public class MapController {
         mapViewer.repaint();
     }
 
+    //clears the map
     public void clear() {
         startClicked = false;
         startLocation = null;
         endLocation = null;
         track.clear();
         waypoints = Set.of();
-        mapViewer.setOverlayPainter(null); // Clear overlay painters
+        mapViewer.setOverlayPainter(null);
         mapViewer.repaint();
     }
 
+    //listeners for when the user clicks on points
     public void setOnStartPointSelected(BiConsumer<Double, Double> listener) {
         this.onStartPointSelected = listener;
     }

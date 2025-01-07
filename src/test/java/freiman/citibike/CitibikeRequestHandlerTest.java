@@ -41,7 +41,7 @@ public class CitibikeRequestHandlerTest {
 
             //then
             assertEquals(citibikeResponse.start.name, "Lenox Ave & W 146 St");
-            //assertEquals(citibikeResponse.end.name, "Berry St & N 8 St");
+            assertEquals(citibikeResponse.end.name, "Berry St & N 8 St");
 
     }
 

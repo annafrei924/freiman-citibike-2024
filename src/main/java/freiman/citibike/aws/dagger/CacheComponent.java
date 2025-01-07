@@ -12,5 +12,6 @@ import javax.inject.Singleton;
 public interface CacheComponent {
     CitibikeRequestHandler handler();
     StationCache cache();
+
     void inject(CitibikeRequestHandler handler);
 }

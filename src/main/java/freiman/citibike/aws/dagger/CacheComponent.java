@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = {CacheModule.class})
+
 public interface CacheComponent {
     CitibikeRequestHandler handler();
     StationCache cache();

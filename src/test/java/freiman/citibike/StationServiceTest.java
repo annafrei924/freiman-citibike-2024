@@ -45,18 +45,18 @@ public class StationServiceTest {
 
             //given
             StationServiceFactory factory = new StationServiceFactory();
-            StationService service = factory.getService();
             String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
 
             StationCache cache = new StationCache();
             //when
-            Map<String, Station> stations = factory.merge(service, cache);
+            Map<String, Station> stations = factory.merge(cache);
 
             //then
             assertTrue(stations.containsKey(key));
             Station station = stations.get(key);
             assertNotEquals(0, station.lon);
             assertNotEquals(0, station.lat);
+            assertNotEquals(0, station.num_docks_available);
 
     }
 

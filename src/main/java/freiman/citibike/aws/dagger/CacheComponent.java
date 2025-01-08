@@ -1,9 +1,7 @@
 package freiman.citibike.aws.dagger;
 
 import dagger.Component;
-import freiman.citibike.aws.CitibikeRequestHandler;
 import freiman.citibike.aws.StationCache;
-
 import javax.inject.Singleton;
 
 @Singleton

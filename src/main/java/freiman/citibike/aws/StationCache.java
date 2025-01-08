@@ -92,4 +92,7 @@ public class StationCache {
         }
     }
 
+    public StationService getService() {
+        return service;
+    }
 }

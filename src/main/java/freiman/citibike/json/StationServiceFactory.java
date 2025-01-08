@@ -20,10 +20,10 @@ public class StationServiceFactory {
     }
 
 
-    public Map<String, Station> merge(StationService service, StationCache cache) {
+    public Map<String, Station> merge(StationCache cache) {
         Map<String, Station> stationsMap = new HashMap<>();
         Stations stationInfo = cache.getStations();
-        Stations stationStatus = service.stationStatus().blockingGet();
+        Stations stationStatus = cache.getService().stationStatus().blockingGet();
         for (Station station : stationInfo.data.stations) {
             stationsMap.put(station.station_id, station);
         }

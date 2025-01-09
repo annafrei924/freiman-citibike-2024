@@ -5,7 +5,6 @@ import java.awt.*;
 
 public class MapFrame extends JFrame {
 
-
     public MapFrame() {
 
         // Set up the frame

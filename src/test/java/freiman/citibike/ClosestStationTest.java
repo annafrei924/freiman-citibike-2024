@@ -40,7 +40,6 @@ public class ClosestStationTest {
             double lon = -73.971212141;
             double lat = 40.744220;
 
-
             //when
             Station closestStation = stationFinder.closestStation(lat, lon, false);
 

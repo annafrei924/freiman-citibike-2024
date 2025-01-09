@@ -10,6 +10,4 @@ public class Station {
     public double lat;
     public int num_docks_available;
     public int num_bikes_available;
-
-
 }

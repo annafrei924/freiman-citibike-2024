@@ -66,13 +66,11 @@ public class StationCache {
     }
 
     public void readFromS3() {
-
         GetObjectRequest getObjectRequest = GetObjectRequest
                 .builder()
                 .bucket(BUCKET_NAME)
                 .key(KEY_NAME)
                 .build();
-
         InputStream in = s3Client.getObject(getObjectRequest);
         Gson gson = new Gson();
         stationInfo = gson.fromJson(new InputStreamReader(in), Stations.class);

@@ -49,11 +49,10 @@ public class StationServiceTest {
     void merge() {
 
             //given
-            StationServiceFactory factory = new StationServiceFactory();
             String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
-
             StationCache cache = new StationCache();
             StationFinder finder = new StationFinder(cache);
+
             //when
             Map<String, Station> stations = finder.merge();
 

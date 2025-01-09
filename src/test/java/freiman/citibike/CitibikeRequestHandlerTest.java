@@ -34,8 +34,7 @@ public class CitibikeRequestHandlerTest {
             when(event.getBody()).thenReturn(body);
             CitibikeRequestHandler handler = new CitibikeRequestHandler();
 
-
-             //when
+            //when
             CitibikeResponse citibikeResponse = handler.handleRequest(event, context);
 
             //then

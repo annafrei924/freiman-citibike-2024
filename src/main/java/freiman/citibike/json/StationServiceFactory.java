@@ -20,20 +20,20 @@ public class StationServiceFactory {
     }
 
 
-    public Map<String, Station> merge(StationCache cache) {
-        Map<String, Station> stationsMap = new HashMap<>();
-        Stations stationInfo = cache.getStations();
-        Stations stationStatus = cache.getService().stationStatus().blockingGet();
-        for (Station station : stationInfo.data.stations) {
-            stationsMap.put(station.station_id, station);
-        }
-        for (Station station : stationStatus.data.stations) {
-            Station existingStation = stationsMap.get(station.station_id);
-            if (existingStation != null) {
-                existingStation.num_docks_available = station.num_docks_available;
-                existingStation.num_bikes_available = station.num_bikes_available;
-            }
-        }
-        return stationsMap;
-    }
+//    public Map<String, Station> merge(StationCache cache) {
+//        Map<String, Station> stationsMap = new HashMap<>();
+//        Stations stationInfo = cache.getStations();
+//        Stations stationStatus = cache.getService().stationStatus().blockingGet();
+//        for (Station station : stationInfo.data.stations) {
+//            stationsMap.put(station.station_id, station);
+//        }
+//        for (Station station : stationStatus.data.stations) {
+//            Station existingStation = stationsMap.get(station.station_id);
+//            if (existingStation != null) {
+//                existingStation.num_docks_available = station.num_docks_available;
+//                existingStation.num_bikes_available = station.num_bikes_available;
+//            }
+//        }
+//        return stationsMap;
+//    }
 }

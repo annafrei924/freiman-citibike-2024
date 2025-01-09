@@ -33,8 +33,6 @@ public class CitibikeRequestHandlerTest {
             APIGatewayProxyRequestEvent event = mock(APIGatewayProxyRequestEvent.class);
             when(event.getBody()).thenReturn(body);
 
-            //StationCache cache = new StationCache();
-
             //when
             CitibikeRequestHandler handler = new CitibikeRequestHandler();
             CitibikeResponse citibikeResponse = handler.handleRequest(event, context);

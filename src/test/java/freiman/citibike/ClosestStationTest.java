@@ -16,12 +16,11 @@ public class ClosestStationTest {
     void closestStationReturn() {
         
             //given
-            StationServiceFactory factory = new StationServiceFactory();
             double lon = -73.971212141;
             double lat = 40.744220;
 
             StationCache cache = new StationCache();
-            StationFinder stationFinder = new StationFinder(factory.merge(cache));
+            StationFinder stationFinder = new StationFinder(cache);
 
             //when
             Station closestStation = stationFinder.closestStation(lat, lon, true);
@@ -36,9 +35,8 @@ public class ClosestStationTest {
     void closestStationPickUp() {
 
             //given
-            StationServiceFactory factory = new StationServiceFactory();
             StationCache cache = new StationCache();
-            StationFinder stationFinder = new StationFinder(factory.merge(cache));
+            StationFinder stationFinder = new StationFinder(cache);
             double lon = -73.971212141;
             double lat = 40.744220;
 

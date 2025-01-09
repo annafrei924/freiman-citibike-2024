@@ -16,8 +16,7 @@ public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyReq
         String body = event.getBody();
         Gson gson = new Gson();
         CitibikeRequest request = gson.fromJson(body, CitibikeRequest.class);
-        StationServiceFactory factory = new StationServiceFactory();
-        StationFinder stationFinder = new StationFinder(factory.merge(cache));
+        StationFinder stationFinder = new StationFinder(cache);
 
         Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);
         Station end = stationFinder.closestStation(request.to.lat, request.to.lon, true);

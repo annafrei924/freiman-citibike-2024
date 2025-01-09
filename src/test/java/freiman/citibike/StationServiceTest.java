@@ -48,8 +48,9 @@ public class StationServiceTest {
             String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
 
             StationCache cache = new StationCache();
+            StationFinder finder = new StationFinder(cache);
             //when
-            Map<String, Station> stations = factory.merge(cache);
+            Map<String, Station> stations = finder.merge();
 
             //then
             assertTrue(stations.containsKey(key));

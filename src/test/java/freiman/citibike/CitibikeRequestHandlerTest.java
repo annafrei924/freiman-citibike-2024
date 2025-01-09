@@ -32,9 +32,10 @@ public class CitibikeRequestHandlerTest {
             Context context = mock(Context.class);
             APIGatewayProxyRequestEvent event = mock(APIGatewayProxyRequestEvent.class);
             when(event.getBody()).thenReturn(body);
-
-            //when
             CitibikeRequestHandler handler = new CitibikeRequestHandler();
+
+
+             //when
             CitibikeResponse citibikeResponse = handler.handleRequest(event, context);
 
             //then

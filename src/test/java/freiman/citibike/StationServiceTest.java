@@ -24,6 +24,8 @@ public class StationServiceTest {
 
         assertNotNull(collection.data.stations[0].station_id);
         assertNotNull(collection.data.stations[0].name);
+        assertNotEquals(0, collection.data.stations[0].lon);
+        assertNotEquals(0, collection.data.stations[0].lat);
 
     }
 
@@ -38,6 +40,9 @@ public class StationServiceTest {
 
         //then
         assertNotNull(collection.data.stations[2].station_id);
+        assertNotEquals(0, collection.data.stations[2].num_bikes_available);
+        assertNotEquals(0, collection.data.stations[2].num_docks_available);
+
     }
 
     @Test

@@ -18,7 +18,6 @@ public class ClosestStationTest {
             //given
             double lon = -73.971212141;
             double lat = 40.744220;
-
             StationCache cache = new StationCache();
             StationFinder stationFinder = new StationFinder(cache);
 

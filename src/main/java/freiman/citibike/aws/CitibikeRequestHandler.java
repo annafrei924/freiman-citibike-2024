@@ -4,28 +4,19 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.google.gson.Gson;
-import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
 import freiman.citibike.StationFinder;
 import freiman.citibike.json.Station;
-import freiman.citibike.aws.dagger.CacheComponent;
-import javax.inject.Inject;
+
 
 public class CitibikeRequestHandler implements RequestHandler<APIGatewayProxyRequestEvent, CitibikeResponse> {
-    private final StationCache cache;
-
-    @Inject
-    public CitibikeRequestHandler(StationCache cache) {
-        this.cache = cache;
-    }
-
+    private final StationCache cache = new StationCache();
     @Override
     public CitibikeResponse handleRequest(APIGatewayProxyRequestEvent event, Context context) {
         String body = event.getBody();
         Gson gson = new Gson();
         CitibikeRequest request = gson.fromJson(body, CitibikeRequest.class);
         StationServiceFactory factory = new StationServiceFactory();
-        StationService service = factory.getService();
         StationFinder stationFinder = new StationFinder(factory.merge(cache));
 
         Station start = stationFinder.closestStation(request.from.lat, request.from.lon, false);

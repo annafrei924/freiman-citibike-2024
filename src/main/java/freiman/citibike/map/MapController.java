@@ -15,12 +15,9 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.*;
-
-
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +34,7 @@ public class MapController {
     private Set<Waypoint> waypoints;
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-
+    //creates the map & mouse features
     public JXMapViewer createMap() {
         mapViewer = new JXMapViewer();
 
@@ -78,12 +75,12 @@ public class MapController {
         return mapViewer;
     }
 
+    //calls the lambda to get the station information
     public void getLambda() {
         Coordinate from = new Coordinate(startLocation.getLatitude(), startLocation.getLongitude());
         Coordinate to = new Coordinate(endLocation.getLatitude(), endLocation.getLongitude());
         CitibikeRequest request = new CitibikeRequest(from, to);
 
-        CitibikeResponse citibikeResponse = null;
         LambdaService service = new LambdaFactory().getService();
         disposables.add(service.getLambda(request)
                 .subscribeOn(Schedulers.io())
@@ -91,7 +88,6 @@ public class MapController {
                 .subscribe(
                         response -> {
                             if (response.start != null && response.end != null) {
-                                System.out.println(response.start.name);
                                 drawRoute(response);
                             }
                         },
@@ -100,6 +96,7 @@ public class MapController {
 
     }
 
+    //draws waypoints and route
     public void drawRoute(CitibikeResponse response) {
         Station startStation = response.start;
         Station endStation = response.end;
@@ -141,17 +138,18 @@ public class MapController {
         mapViewer.repaint();
     }
 
+    //clears the map
     public void clear() {
         startClicked = false;
         startLocation = null;
         endLocation = null;
         track.clear();
         waypoints = Set.of();
-        mapViewer.setOverlayPainter(null); // Clear overlay painters
+        mapViewer.setOverlayPainter(null);
         mapViewer.repaint();
-        System.out.println("Cleared all points and overlays.");
     }
 
+    //listeners
     public void setOnStartPointSelected(BiConsumer<Double, Double> listener) {
         this.onStartPointSelected = listener;
     }

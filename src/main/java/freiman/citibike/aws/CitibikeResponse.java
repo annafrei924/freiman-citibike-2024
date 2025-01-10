@@ -8,11 +8,6 @@ public class CitibikeResponse {
     public Station start;
     public Station end;
 
-    public CitibikeResponse(Coordinate from, Coordinate to) {
-        this.from = from;
-        this.to = to;
-    }
-
     public CitibikeResponse(Coordinate from, Coordinate to, Station start, Station end) {
         this.from = from;
         this.to = to;

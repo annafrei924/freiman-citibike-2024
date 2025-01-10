@@ -1,11 +1,8 @@
 package freiman.citibike.aws;
 
-import freiman.citibike.json.StationService;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.util.List;
 
 public class LambdaFactory {
 
@@ -19,4 +16,3 @@ public class LambdaFactory {
         return retrofit.create(LambdaService.class);
     }
 }
-

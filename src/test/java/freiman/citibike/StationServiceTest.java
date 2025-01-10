@@ -1,5 +1,6 @@
 package freiman.citibike;
 
+import freiman.citibike.aws.StationCache;
 import freiman.citibike.json.Station;
 import freiman.citibike.json.StationService;
 import freiman.citibike.json.StationServiceFactory;
@@ -23,8 +24,8 @@ public class StationServiceTest {
 
         assertNotNull(collection.data.stations[0].station_id);
         assertNotNull(collection.data.stations[0].name);
-        assertNotNull(collection.data.stations[0].lon);
-        assertNotNull(collection.data.stations[0].lat);
+        assertNotEquals(0, collection.data.stations[0].lon);
+        assertNotEquals(0, collection.data.stations[0].lat);
 
     }
 
@@ -39,29 +40,29 @@ public class StationServiceTest {
 
         //then
         assertNotNull(collection.data.stations[2].station_id);
-        assertNotNull(collection.data.stations[0].num_bikes_available);
-        assertNotNull(collection.data.stations[0].num_docks_available);
+        //assertNotEquals(0, collection.data.stations[2].num_bikes_available);
+        assertNotEquals(0, collection.data.stations[2].num_docks_available);
+
     }
 
     @Test
     void merge() {
-        //given
-        StationServiceFactory factory = new StationServiceFactory();
-        StationService service = factory.getService();
-        String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
 
-        //when
-        Map<String, Station> stations = factory.merge(service);
+            //given
+            String key = "66db3687-0aca-11e7-82f6-3863bb44ef7c";
+            StationCache cache = new StationCache();
+            StationFinder finder = new StationFinder(cache);
 
-        //then
-        assertNotNull(stations.containsKey(key));
-        Station station = stations.get(key);
-        assertNotNull(station.lon);
-        assertNotEquals(0, station.lon);
-        assertNotNull(station.lat);
-        assertNotEquals(0, station.lat);
-        assertNotNull(station.num_docks_available);
-        assertNotNull(station.num_bikes_available);
+            //when
+            Map<String, Station> stations = finder.merge();
+
+            //then
+            assertTrue(stations.containsKey(key));
+            Station station = stations.get(key);
+            assertNotEquals(0, station.lon);
+            assertNotEquals(0, station.lat);
+            assertNotEquals(0, station.num_docks_available);
+
     }
 
 }
